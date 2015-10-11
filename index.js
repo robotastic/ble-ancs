@@ -99,7 +99,7 @@ Inform.prototype.onStateChange = function(state) {
   console.log('on -> stateChange: ' + state);
 
   if (state === 'poweredOn') {
-    if (able.startAdvertisingWithEIRData) {
+    if (_able.startAdvertisingWithEIRData) {
       /*var ad = new Buffer([
         // flags
         0x02, 0x01, 0x02,
@@ -124,13 +124,13 @@ Inform.prototype.onStateChange = function(state) {
       //var scan = new Buffer([0x05, 0x08, 0x74, 0x65, 0x73, 0x74]); // name
       var scan = new Buffer([0x11, 0x15, 0xd0, 0x00, 0x2D, 0x12, 0x1E, 0x4B, 0x0F,
         0xA4, 0x99, 0x4E, 0xCE, 0xB5, 0x31, 0xF4, 0x05, 0x79]);
-      able.startAdvertisingWithEIRData(ad, scan);
+      this._able.startAdvertisingWithEIRData(ad, scan);
     } else {
-      able.startAdvertising('ancs-test', ['7905f431b5ce4e99a40f4b1e122d00d0']);
+      this._able.startAdvertising('ancs-test', ['7905f431b5ce4e99a40f4b1e122d00d0']);
     }
 
   } else {
-    able.stopAdvertising();
+    this._able.stopAdvertising();
   }
 };
 
@@ -156,7 +156,7 @@ Inform.prototype.onAdvertisingStart = function(error) {
   console.log('on -> advertisingStart: ' + (error ? 'error ' + error : 'success'));
 
 
-    able.setServices(  [    new AblePrimaryService({
+    this._able.setServices(  [    new AblePrimaryService({
         uuid: '13333333333333333333333333333337',            //'7905f431b5ce4e99a40f4b1e122d00d0',
         characteristics: [new GenericCharacteristic()]
       })

@@ -99,7 +99,7 @@ Inform.prototype.onStateChange = function(state) {
   console.log('on -> stateChange: ' + state);
 
   if (state === 'poweredOn') {
-    if (_able.startAdvertisingWithEIRData) {
+    if (this._able.startAdvertisingWithEIRData) {
       /*var ad = new Buffer([
         // flags
         0x02, 0x01, 0x02,

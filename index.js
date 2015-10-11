@@ -1,5 +1,9 @@
 var Able = require('./lib/able');
 
+var util = require('util');
+var debug = require('debug')('Inform');
+var events = require('events');
+
 var AblePrimaryService = require('./lib/primary-service.js');
 var GenericCharacteristic = require('./generic-characteristic');
 var Notification = require('./ancs-notification');
@@ -27,6 +31,8 @@ function Inform() {
 	this._able.on('connect', this.onConnect.bind(this));
 	this._able.on('disconnect', this.onDisconnect.bind(this));
 };
+
+util.inherits(Inform, events.EventEmitter);
 
 Inform.prototype.discoverServicesAndCharacteristics = function(callback) {
   this._peripheral.findServiceAndCharacteristics(SERVICE_UUID, [], function(error, services, characteristics) {
@@ -198,4 +204,4 @@ Inform.prototype.onDisconnect = function() {
 
 
 
-module.exports = new Inform;
+module.exports = Inform;

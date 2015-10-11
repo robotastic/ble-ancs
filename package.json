@@ -1,0 +1,41 @@
+{
+  "name": "inform",
+  "version": "0.0.1",
+  "description": "An Apple ANCS reciever from Linux. It is a combination of the Bleno, Noble and ANCS projects from Sandeep Mistry ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Apple",
+    "ANCS",
+    "iOS",
+    "Notification",
+    "Bluetooth",
+    "BLE"
+  ],
+  "os": [
+    "linux"
+  ],
+  "engines": {
+    "node": ">=0.8"
+  },
+  "author": "Luke Berndt <luke@robotastic.com>",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "~2.2.0"
+  },
+  "optionalDependencies": {
+    "bluetooth-hci-socket": "~0.3.3",
+    "bplist-parser": "0.0.6",
+    "xpc-connection": "~0.1.4"
+  },
+  "devDependencies": {
+    "jshint": "latest",
+    "mocha": "~1.8.2",
+    "should": "~1.2.2",
+    "sinon": "~1.6.0",
+    "async": "~0.2.9",
+    "ws": "~0.4.31"
+  }
+}

@@ -173,17 +173,8 @@ Inform.prototype.onEncryptChange = function() {
   console.log("able encryptChange!!!");
       this.discoverServicesAndCharacteristics(function() {
 
-        var handle = this._able._bindings._handles[ancs.uuid];
-         var aclStream = this._able._bindings._aclStreams[handle];
-
-
-      aclStream.on('encryptFail', function() {
-	      console.log('ancs - services and characteristics failed'); 
-      });
 
     });
-
-
 };
 
 

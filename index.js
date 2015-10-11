@@ -148,7 +148,7 @@ Inform.prototype.onAccept = function(peripheral) {
 };
 
 Inform.prototype.onNotification = function(notification) {
-	emit('notification', notification);
+	this.emit('notification', notification);
 };
 
 Inform.prototype.onAdvertisingStart = function(error) {

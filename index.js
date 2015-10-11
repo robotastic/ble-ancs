@@ -147,21 +147,15 @@ Inform.prototype.onAccept = function(peripheral) {
   	this._peripheral.on('disconnect', this.onDisconnect.bind(this));
 };
 
-Inform.prototype.onNotification = function(notification) {
-	this.emit('notification', notification);
-};
-
 Inform.prototype.onAdvertisingStart = function(error) {
 
   console.log('on -> advertisingStart: ' + (error ? 'error ' + error : 'success'));
-
 
     this._able.setServices(  [    new AblePrimaryService({
         uuid: '13333333333333333333333333333337',            //'7905f431b5ce4e99a40f4b1e122d00d0',
         characteristics: [new GenericCharacteristic()]
       })
     ]);
-  
 };
 
 Inform.prototype.onMtuChange = function() {

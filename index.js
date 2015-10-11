@@ -11,7 +11,7 @@ var CONTROL_POINT_UUID          = '69d1d8f345e149a898219bbdfdaad9d9';
 var DATA_SOURCE_UUID            = '22eac6e924d64bb5be44b36ace7c7bfb';
 
 
-var Inform = function() {
+function Inform() {
 	this._able = new Able();
 
 	this._characteristics = {};

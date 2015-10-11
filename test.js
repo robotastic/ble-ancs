@@ -6,7 +6,7 @@ inform.on('notification', function(notification) {
 
 notification.readTitle( function(title) {
 	notification.readMessage( function(message) {
-		console("Notification: " + notification);
+		console.log("Notification: " + notification);
 	});
 });
 

@@ -126,7 +126,7 @@ Inform.prototype.onStateChange = function(state) {
   } else {
     able.stopAdvertising();
   }
-});
+};
 
 
 
@@ -139,11 +139,11 @@ Inform.prototype.onAccept = function(peripheral) {
   	this.uuid = peripheral.uuid;
 
   	this._peripheral.on('disconnect', this.onDisconnect.bind(this));
-});
+};
 
 Inform.prototype.onNotification = function(notification) {
 	emit('notification', notification);
-});
+};
 
 Inform.prototype.onAdvertisingStart = function(error) {
 
@@ -156,11 +156,11 @@ Inform.prototype.onAdvertisingStart = function(error) {
       })
     ]);
   
-});
+};
 
 Inform.prototype.onMtuChange = function() {
 
-});
+};
 
 
 Inform.prototype.onEncryptChange = function() {
@@ -178,22 +178,22 @@ Inform.prototype.onEncryptChange = function() {
     });
 
 
-});
+};
 
 
 Inform.prototype.onEncryptFail = function() {
   console.log("able -> encryptFail");
-});
+};
 
 Inform.prototype.onConnect = function() {
     console.log('able -> connect');
-});
+};
 
 Inform.prototype.onDisconnect = function() {
   console.log('Got a disconnect');
   //able.connect(target_uuid);
   this.emit('disconnect');
-});
+};
 
 
 

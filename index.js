@@ -1,7 +1,7 @@
 var Able = require('./lib/able');
 
 var util = require('util');
-var debug = require('debug')('Inform');
+var debug = require('debug')('BleAncs');
 var events = require('events');
 
 var AblePrimaryService = require('./lib/primary-service.js');
@@ -15,7 +15,7 @@ var CONTROL_POINT_UUID          = '69d1d8f345e149a898219bbdfdaad9d9';
 var DATA_SOURCE_UUID            = '22eac6e924d64bb5be44b36ace7c7bfb';
 
 
-function Inform() {
+function BleAncs() {
 	this._able = new Able();
 
 	this._characteristics = {};
@@ -32,9 +32,9 @@ function Inform() {
 	this._able.on('disconnect', this.onDisconnect.bind(this));
 };
 
-util.inherits(Inform, events.EventEmitter);
+util.inherits(BleAncs, events.EventEmitter);
 
-Inform.prototype.discoverServicesAndCharacteristics = function(callback) {
+BleAncs.prototype.discoverServicesAndCharacteristics = function(callback) {
   this._peripheral.findServiceAndCharacteristics(SERVICE_UUID, [], function(error, services, characteristics) {
     for (var i in characteristics) {
 /*      console.log("CHARECTERISTIC: "+characteristics[i]);
@@ -57,7 +57,7 @@ Inform.prototype.discoverServicesAndCharacteristics = function(callback) {
   }.bind(this));
 };
 
-Inform.prototype.onNotification = function(data) {
+BleAncs.prototype.onNotification = function(data) {
   var notification = new Notification(this, data);
 
   this._notifications[notification.uid] = notification;
@@ -65,7 +65,7 @@ Inform.prototype.onNotification = function(data) {
   this.emit('notification', notification);
 };
 
-Inform.prototype.onData = function(data) {
+BleAncs.prototype.onData = function(data) {
   var commandId = data.readUInt8(0);
 
   if (commandId === 0x00) {
@@ -82,7 +82,7 @@ Inform.prototype.onData = function(data) {
   }
 };
 
-Inform.prototype.requestNotificationAttribute = function(uid, attributeId, maxLength) {
+BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxLength) {
   var buffer = new Buffer(maxLength ? 8 : 6);
 
   buffer.writeUInt8(0x00, 0);
@@ -95,7 +95,7 @@ Inform.prototype.requestNotificationAttribute = function(uid, attributeId, maxLe
   this._characteristics[CONTROL_POINT_UUID].write(buffer, false);
 };
 
-Inform.prototype.onStateChange = function(state) {
+BleAncs.prototype.onStateChange = function(state) {
   console.log('on -> stateChange: ' + state);
 
   if (state === 'poweredOn') {
@@ -136,7 +136,7 @@ Inform.prototype.onStateChange = function(state) {
 
 
 
-Inform.prototype.onAccept = function(peripheral) {
+BleAncs.prototype.onAccept = function(peripheral) {
 
    console.log('on -> accept: ' );
 	  this._peripheral = peripheral;
@@ -147,7 +147,7 @@ Inform.prototype.onAccept = function(peripheral) {
   	this._peripheral.on('disconnect', this.onDisconnect.bind(this));
 };
 
-Inform.prototype.onAdvertisingStart = function(error) {
+BleAncs.prototype.onAdvertisingStart = function(error) {
 
   console.log('on -> advertisingStart: ' + (error ? 'error ' + error : 'success'));
 
@@ -158,12 +158,12 @@ Inform.prototype.onAdvertisingStart = function(error) {
     ]);
 };
 
-Inform.prototype.onMtuChange = function() {
+BleAncs.prototype.onMtuChange = function() {
 
 };
 
 
-Inform.prototype.onEncryptChange = function() {
+BleAncs.prototype.onEncryptChange = function() {
   console.log("able encryptChange!!!");
       this.discoverServicesAndCharacteristics(function() {
 
@@ -172,15 +172,15 @@ Inform.prototype.onEncryptChange = function() {
 };
 
 
-Inform.prototype.onEncryptFail = function() {
+BleAncs.prototype.onEncryptFail = function() {
   console.log("able -> encryptFail");
 };
 
-Inform.prototype.onConnect = function() {
+BleAncs.prototype.onConnect = function() {
     console.log('able -> connect');
 };
 
-Inform.prototype.onDisconnect = function() {
+BleAncs.prototype.onDisconnect = function() {
   console.log('Got a disconnect');
   //able.connect(target_uuid);
   this.emit('disconnect');
@@ -189,4 +189,4 @@ Inform.prototype.onDisconnect = function() {
 
 
 
-module.exports = Inform;
+module.exports = BleAncs;

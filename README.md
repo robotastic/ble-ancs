@@ -1,18 +1,16 @@
-# noble
+# BLE ANCS
+===========
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/noble?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+This is a NodeJS library that provides Linux systems with notifications from iOS devices via Bluetooth LE, using the [Apple Notification Center Service (ANCS)](https://developer.apple.com/library/ios/documentation/CoreBluetooth/Reference/AppleNotificationCenterServiceSpecification/Introduction/Introduction.html).
 
-A Node.js BLE (Bluetooth Low Energy) central module.
+This library is mostly a combination of 3 great libraries from [Sandeep Mistry](https://github.com/sandeepmistry):
+ * [noble](https://github.com/sandeepmistry/noble) - A Node.js BLE (Bluetooth Low Energy) central module
+ * [bleno](https://github.com/sandeepmistry/bleno) - A Node.js module for implementing BLE (Bluetooth Low Energy) peripherals
+ * [node-ancs](https://github.com/sandeepmistry/node-ancs) - A node.js lib to access the Apple Notification Center Service (ANCS)
 
-Want to implement a peripheral? Checkout [bleno](https://github.com/sandeepmistry/bleno)
-
-__Note:__ Mac OS X, Linux and Windows are currently the only supported OSes. Other platforms may be developed later on.
+I have combined noble and bleno together so it is possible to easily pivot from being a peripheral to a central role. This allows for a Pairing to be established between the iOS device and the Linux system without any requiring any iOS Apps. You can simply go into the Bluetooth setting and connect with the Linux system to establish an ANCS pairing.
 
 ## Prerequisites
-
-### OS X
-
- * install [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12)
 
 ### Linux (Ubuntu)
 
@@ -22,7 +20,7 @@ __Note:__ Mac OS X, Linux and Windows are currently the only supported OSes. Oth
 #### Ubuntu/Debian/Raspbian
 
 ```sh
-sudo apt-get install bluetooth bluez-utils libbluetooth-dev libudev-dev
+sudo apt-get install bluetooth bluez libbluetooth-dev libudev-dev
 ```
 
 #### Fedora / Other-RPM based
@@ -31,343 +29,7 @@ sudo apt-get install bluetooth bluez-utils libbluetooth-dev libudev-dev
 sudo yum install bluez bluez-libs bluez-libs-devel
 ```
 
-#### Intel Edison
-
-See [Configure Intel Edison for Bluetooth LE (Smart) Development](http://rexstjohn.com/configure-intel-edison-for-bluetooth-le-smart-development/)
-
-### Windows
-
- * [node-gyp requirements for Windows](https://github.com/TooTallNate/node-gyp#installation)
-   * Python 2.7
-   * Visual Studio ([Express](https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx))
- * [node-bluetooth-hci-socket prerequisites](https://github.com/sandeepmistry/node-bluetooth-hci-socket#windows)
-   * Compatible Bluetooth 4.0 USB adapter
-   * [WinUSB](https://msdn.microsoft.com/en-ca/library/windows/hardware/ff540196(v=vs.85).aspx) driver setup for Bluetooth 4.0 USB adapter, using [Zadig tool](http://zadig.akeo.ie/)
-
-## Install
-
-```sh
-npm install noble
-```
-
-## Usage
-
-```javascript
-var noble = require('noble');
-```
-
-### Actions
-
-#### Start scanning
-
-```javascript
-noble.startScanning(); // any service UUID, no duplicates
-
-
-noble.startScanning([], true); // any service UUID, allow duplicates
-
-
-var serviceUUIDs = ["<service UUID 1>", ...]; // default: [] => all
-var allowDuplicates = <false|true>; // default: false
-
-noble.startScanning(serviceUUIDs, allowDuplicates[, callback(error)]); // particular UUID's
-```
-
-__NOTE:__ ```noble.state``` must be ```poweredOn``` before scanning is started. ```noble.on('stateChange', callback(state));``` can be used register for state change events.
-
-#### Stop scanning
-
-```javascript
-noble.stopScanning();
-```
-
-#### Peripheral
-
-##### Connect
-
-```javascript
-peripheral.connect([callback(error)]);
-```
-
-##### Disconnect or cancel pending connection
-
-```javascript
-peripheral.disconnect([callback(error)]);
-```
-
-##### Update RSSI
-
-```javascript
-peripheral.updateRssi([callback(error, rssi)]);
-```
-
-##### Discover services
-
-```javascript
-peripheral.discoverServices(); // any service UUID
-
-var serviceUUIDs = ["<service UUID 1>", ...];
-peripheral.discoverServices(serviceUUIDs[, callback(error, services)]); // particular UUID's
-```
-
-##### Discover all services and characteristics
-
-```javascript
-peripheral.discoverAllServicesAndCharacteristics([callback(error, services, characteristics));
-```
-
-##### Discover some services and characteristics
-
-```javascript
-var serviceUUIDs = ["<service UUID 1>", ...];
-var characteristicUUIDs = ["<characteristic UUID 1>", ...];
-peripheral.discoverSomeServicesAndCharacteristics(serviceUUIDs, characteristicUUIDs, [callback(error, services, characteristics));
-```
-#### Service
-
-##### Discover included services
-
-```javascript
-service.discoverIncludedServices(); // any service UUID
-
-var serviceUUIDs = ["<service UUID 1>", ...];
-service.discoverIncludedServices(serviceUUIDs[, callback(error, includedServiceUuids)]); // particular UUID's
-```
-
-##### Discover characteristics
-
-```javascript
-service.discoverCharacteristics() // any characteristic UUID
-
-var characteristicUUIDs = ["<characteristic UUID 1>", ...];
-service.discoverCharacteristics(characteristicUUIDs[, callback(error, characteristics)]); // particular UUID's
-```
-
-#### Characteristic
-
-##### Read
-
-```javascript
-characteristic.read([callback(error, data)]);
-```
-
-##### Write
-
-```javascript
-characteristic.write(data, notify[, callback(error)]); // data is a buffer, notify is true|false
-```
-
-##### Broadcast
-
-```javascript
-characteristic.broadcast(broadcast[, callback(error)]); // broadcast is true|false
-```
-
-##### Notify
-
-```javascript
-characteristic.notify(notify[, callback(error)]); // notify is true|false
-```
-
-  * allows notification to trigger `'data'` event
-  * use for characteristics with notify or indicate properties
-
-##### Discover descriptors
-
-```javascript
-characteristic.discoverDescriptors([callback(error, descriptors)]);
-```
-
-##### Read value
-
-```javascript
-descriptor.readValue([callback(error, data)]);
-```
-
-##### Write value
-
-```javascript
-descriptor.writeValue(data[, callback(error)]); // data is a buffer
-```
-
-#### Handle
-
-##### Read
-
-```javascript
-peripheral.readHandle(handle, callback(error, data));
-```
-
-##### Write
-
-```javascript
-peripheral.writeHandle(handle, data, withoutResponse, callback(error));
-```
-
-### Events
-
-#### Adapter state change
-
-```javascript
-state = <"unknown" | "resetting" | "unsupported" | "unauthorized" | "poweredOff" | "poweredOn">
-
-noble.on('stateChange', callback(state));
-```
-
-#### Scan started:
-
-```javascript
-noble.on('scanStart', callback);
-```
-
-#### Scan stopped
-
-```javascript
-noble.on('scanStop', callback);
-```
-
-#### Peripheral discovered
-
-```javascript
-peripheral = {
-  id: "<id>",
-  address: "<BT address">, // Bluetooth Address of device, or 'unknown' if not known
-  addressType: "<BT address type>", // Bluetooth Address type (public, random), or 'unknown' if not known
-  connectable: <connectable>, // true or false, or undefined if not known
-  advertisement: {
-    localName: "<name>",
-    txPowerLevel: <int>,
-    serviceUuids: ["<service UUID>", ...],
-    manufacturerData: <Buffer>,
-    serviceData: [
-        {
-            uuid: "<service UUID>"
-            data: <Buffer>
-        },
-        ...
-    ]
-  },
-  rssi: <rssi>
-};
-
-noble.on('discover', callback(peripheral));
-```
-
-#### Warnings
-
-```javascript
-noble.on('warning', callback(message));
-```
-
-#### Peripheral
-
-##### Connected
-
-```javascript
-peripheral.on('connect', callback);
-```
-
-##### Disconnected:
-
-```javascript
-peripheral.on('disconnect', callback);
-```
-
-##### RSSI update
-
-```javascript
-peripheral.on('rssiUpdate', callback(rssi));
-```
-
-##### Services discovered
-
-```javascript
-peripheral.on('servicesDiscover', callback(services));
-```
-
-#### Service
-
-##### Included services discovered
-
-```javascript
-service.on('includedServicesDiscover', callback(includedServiceUuids));
-```
-
-##### Characteristics discovered
-
-```javascript
-characteristic = {
-  uuid: "<uuid>",
-   // properties: 'broadcast', 'read', 'writeWithoutResponse', 'write', 'notify', 'indicate', 'authenticatedSignedWrites', 'extendedProperties'
-  properties: [...]
-};
-
-service.on('characteristicsDiscover', callback(characteristics));
-```
-
-#### Characteristic
-
-##### Data
-
-Emitted when characteristic read has completed, result of ```characteristic.read(...)``` or characteristic value has been updated by peripheral via notification or indication - after having been enabled with ```notify(true[, callback(error)])```.
-
-```javascript
-characteristic.on('data', callback(data, isNotification));
-
-characteristic.on('read', callback(data, isNotification)); // legacy
-```
-
-##### Write
-
-Emitted when characteristic write has completed, result of ```characteristic.write(...)```.
-
-```javascript
-characteristic.on('write', withoutResponse, callback());
-```
-
-##### Broadcast
-
-Emitted when characteristic broadcast state changes, result of ```characteristic.broadcast(...)```.
-
-```javascript
-characteristic.on('broadcast', callback(state));
-```
-
-##### Notify
-
-Emitted when characteristic notification state changes, result of ```characteristic.notify(...)```.
-
-```javascript
-characteristic.on('notify', callback(state));
-```
-
-##### Descriptors discovered
-
-```javascript
-descriptor = {
-  uuid: '<uuid>'
-};
-
-characteristic.on('descriptorsDiscover', callback(descriptors));
-```
-
-#### Descriptor
-
-##### Value read
-
-```javascript
-descriptor.on('valueRead', data);
-```
-
-##### Value write
-
-```javascript
-descriptor.on('valueWrite');
-```
-
-## Running on Linux
-
-### Running without root/sudo
+#### Running without root/sudo
 
 Run the following command:
 
@@ -382,24 +44,104 @@ __Note:__ The above command requires ```setcap``` to be installed, it can be ins
  * apt: ```sudo apt-get install libcap2-bin```
  * yum: ```su -c \'yum install libcap2-bin\'```
 
-### Multiple Adapters
-
-```hci0``` is used by default to override set the ```NOBLE_HCI_DEVICE_ID``` environment variable to the interface number.
-
-Example, specify ```hci1```:
+### IMPORTANT!
+You need to stop bluetoothd before running ble-ancs
 
 ```sh
-sudo NOBLE_HCI_DEVICE_ID=1 node <your file>.js
+sudo stop bluetooth
 ```
 
-### Reporting all HCI events
-
-By default noble waits for both the advertisement data and scan response data for each Bluetooth address. If your device does not use scan response the following enviroment variable can be used to bypass it.
-
+or
 
 ```sh
-sudo NOBLE_REPORT_ALL_HCI_EVENTS=1 node <your file>.js
+sudo /etc/init.d/bluetooth stop
 ```
+
+
+
+
+
+Usage
+-----
+
+var BleAncs = require('ble-ancs');
+
+var ancs = new BleAncs();
+
+__Notification Events__
+
+    ancs.on('notification', function(notification) {
+        ...
+    });
+
+ * notification has the following properties
+   * event (one of):
+     * added
+     * modified
+     * removed
+   * flags (array):
+     * silent
+     * important
+   * category (one of):
+     * other
+     * incomingCall
+     * missedCall
+     * voicemail
+     * schedule
+     * email
+     * other
+     * news
+     * healthAndFitness
+     * businessAndFinance
+     * location
+     * entertianment
+   * categoryCount
+   * uid
+
+__Operations for 'added' or 'modified' notifications (event property)__
+
+Read App Identifier
+
+    notification.readAppIdentifier(function(appIdentifier) {
+      ...
+    });
+
+Read Title
+
+    notification.readTitle(function(title) {
+      ...
+    });
+
+Read Subtitle
+
+    notification.readSubtitle(function(subtitle) {
+      ...
+    });
+
+Read Message
+
+    notification.readMessage(function(message) {
+      ...
+    });
+
+Read Date
+
+    notification.readDate(function(date) {
+      ...
+    });
+
+Read All Attributes
+
+    notification.readAttributes(function(attributes) {
+      ...
+    });
+
+ * attributes has the following properties
+   * appIdentifier
+   * title
+   * subtitle
+   * message
+   * date
 
 ## Useful Links
 

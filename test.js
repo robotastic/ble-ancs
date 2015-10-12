@@ -1,8 +1,8 @@
-var Inform = require('./index');
+var BleAncs = require('./index');
 
-var inform = new Inform();
+var ancs = new BleAncs();
 
-inform.on('notification', function(notification) {
+ancs.on('notification', function(notification) {
 
 notification.readTitle( function(title) {
 	notification.readMessage( function(message) {

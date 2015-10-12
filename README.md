@@ -64,9 +64,9 @@ sudo /etc/init.d/bluetooth stop
 Usage
 -----
 
-var BleAncs = require('ble-ancs');
+    var BleAncs = require('ble-ancs');
 
-var ancs = new BleAncs();
+    var ancs = new BleAncs();
 
 __Notification Events__
 

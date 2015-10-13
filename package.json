@@ -1,5 +1,5 @@
 {
-  "name": "inform",
+  "name": "ble-ancs",
   "version": "0.0.1",
   "description": "An Apple ANCS reciever from Linux. It is a combination of the Bleno, Noble and ANCS projects from Sandeep Mistry ",
   "main": "index.js",

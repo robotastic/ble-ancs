@@ -182,7 +182,9 @@ BleAncs.prototype.onConnect = function() {
 
 BleAncs.prototype.onDisconnect = function() {
   console.log('Got a disconnect');
-  //able.connect(target_uuid);
+
+
+
   this.emit('disconnect');
 };
 

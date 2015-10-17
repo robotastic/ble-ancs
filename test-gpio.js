@@ -1,5 +1,7 @@
 var BleAncs = require('./index');
-var gpio = require("pi-gpio");
+var Gpio = require('onoff').Gpio,
+  led = new Gpio(7, 'out');
+
 
 var ancs = new BleAncs();
 
@@ -13,14 +15,10 @@ ancs.on('notification', function(notification) {
 			
 		});
 	});
-	gpio.open(7, "output", function(err) {     // Open pin 16 for output 
-   		gpio.write(7, 1, function() {          // Set pin 16 high (1) 
-   			setTimeout(function() {
-   				gpio.write(7, 1, function() { 
-        			gpio.close(7);  
-        		});                   // Close pin 16 
-    		},1000);
-		});
+	led.write(1, function() {          // Set pin 16 high (1) 
+   		setTimeout(function() {
+   			led.writeSync(1);                   // Close pin 16 
+    	},1000);
 	});
 
 });

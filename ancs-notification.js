@@ -221,19 +221,13 @@ Notification.prototype.readAttributes = function(callback) {
       this.readSubtitle(function(subtitle) {
         this.readMessage(function(message) {
           this.readDate(function(date) {
-            this.readPositiveLabel(function(positiveLabel){
-              this.readNegativeLabel(function(negativeLabel){
                   callback({
                   appIdentifier: appIdentifier,
                   title: title,
                   subtitle: subtitle,
                   message: message,
-                  date: date,
-                  positiveLabel: positiveLabel,
-                  negativeLabel: negativeLabel
+                  date: date
                 });
-              }.bind(this));
-            }.bind(this));
           }.bind(this));
         }.bind(this));
       }.bind(this));

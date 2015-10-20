@@ -28,6 +28,8 @@ var SUBTITLE       = 2;
 var MESSAGE        = 3;
 var MESSAGE_SIZE   = 4;
 var DATE           = 5;
+var POSITIVE_LABEL = 6;
+var NEGATIVE_LABEL = 7;
 
 var ATTRIBUTE_ID = [
   'appIdentifier',
@@ -35,7 +37,9 @@ var ATTRIBUTE_ID = [
   'subtitle',
   'message',
   'messageSize',
-  'date'
+  'date',
+  'positiveLabel',
+  'negativeLabel'
 ];
 
 var Notification = function(ancs, data) {
@@ -80,7 +84,9 @@ Notification.prototype.toString = function() {
     subtitle: this.subtitle,
     message: this.message,
     messageSize: this.messageSize,
-    date: this.date
+    date: this.date,
+    positiveLabel: this.positiveLabel,
+    negativeLabel: this.negativeLabel
   });
 };
 
@@ -129,6 +135,14 @@ Notification.prototype.onData = function(data) {
       var date = this.date = new Date(year, month, day, hours, minutes, seconds);
 
       this.emit('date', date);
+    } else if (attributeId === POSITIVE_LABEL) {
+      var positiveLabel = this.positiveLabel = attributeData.toString();
+
+      this.emit('positiveLabel', positiveLabel);
+    } else if (attributeId === NEGATIVE_LABEL) {
+      var negativeLabel = this.negativeLabel = attributeData.toString();
+
+      this.emit('negativeLabel', negativeLabel);
     }
 
     this._buffer = '';
@@ -185,19 +199,41 @@ Notification.prototype.readDate = function(callback) {
   this._ancs.requestNotificationAttribute(this.uid, DATE);
 };
 
+Notification.prototype.readPositiveLabel = function(callback) {
+  this.once('positiveLabel', function(positiveLabel) {
+    callback(positiveLabel);
+  });
+
+  this._ancs.requestNotificationAttribute(this.uid, POSITIVE_LABEL, 255);
+};
+
+Notification.prototype.readNegativeLabel = function(callback) {
+  this.once('negativeLabel', function(negativeLabel) {
+    callback(negativeLabel);
+  });
+
+  this._ancs.requestNotificationAttribute(this.uid, NEGATIVE_LABEL, 255);
+};
+
 Notification.prototype.readAttributes = function(callback) {
   this.readAppIdentifier(function(appIdentifier) {
     this.readTitle(function(title) {
       this.readSubtitle(function(subtitle) {
         this.readMessage(function(message) {
           this.readDate(function(date) {
-              callback({
-              appIdentifier: appIdentifier,
-              title: title,
-              subtitle: subtitle,
-              message: message,
-              date: date
-            });
+            this.readPositiveLabel(function(positiveLabel){
+              this.readNegativeLabel(function(negativeLabel){
+                  callback({
+                  appIdentifier: appIdentifier,
+                  title: title,
+                  subtitle: subtitle,
+                  message: message,
+                  date: date,
+                  positiveLabel: positiveLabel,
+                  negativeLabel: negativeLabel
+                });
+              }.bind(this));
+            }.bind(this));
           }.bind(this));
         }.bind(this));
       }.bind(this));

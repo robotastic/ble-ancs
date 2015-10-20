@@ -60,9 +60,20 @@ BleAncs.prototype.discoverServicesAndCharacteristics = function(callback) {
 BleAncs.prototype.onNotification = function(data) {
   var notification = new Notification(this, data);
 
-  this._notifications[notification.uid] = notification;
+  if (notification.event == 'removed') {
+    if (notification.uid in this._notifications) {
+      var index = this._notifications.indexOf(notification.uid);
+      if (index > -1) {
+        notification = this._notifications[notification.uid]
+        this._notifications.splice(index, 1);
+        this.emit('removed', notification);
+      }
+    }
+  } else {
+    this._notifications[notification.uid] = notification;
+    this.emit('notification', notification);
+  }
 
-  this.emit('notification', notification);
 };
 
 BleAncs.prototype.onData = function(data) {
@@ -94,6 +105,8 @@ BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxL
 
   this._characteristics[CONTROL_POINT_UUID].write(buffer, false);
 };
+
+
 
 BleAncs.prototype.onStateChange = function(state) {
   console.log('on -> stateChange: ' + state);
@@ -166,8 +179,6 @@ BleAncs.prototype.onMtuChange = function() {
 BleAncs.prototype.onEncryptChange = function() {
   console.log("able encryptChange!!!");
       this.discoverServicesAndCharacteristics(function() {
-
-
     });
 };
 

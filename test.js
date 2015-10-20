@@ -3,11 +3,9 @@ var BleAncs = require('./index');
 var ancs = new BleAncs();
 
 ancs.on('notification', function(notification) {
+	notification.readAttributes(function(attributes) {
+		console.log("Notification: " + attributes);
 
-notification.readTitle( function(title) {
-	notification.readMessage( function(message) {
-		console.log("Notification: " + notification);
 	});
-});
 
 });

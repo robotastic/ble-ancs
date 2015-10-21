@@ -45,7 +45,7 @@ __Note:__ The above command requires ```setcap``` to be installed, it can be ins
  * yum: ```su -c \'yum install libcap2-bin\'```
 
 ### IMPORTANT!
-You need to stop bluetoothd before running ble-ancs
+You need to have the Bluetooth Service / `bluetoothd` initially running while the bluetooth LE dongle is attached. After they have initialized the dongle, stop the bluetooth service from running. Watch out for it respawning. Do a quick check with `ps -A | grep 'blue'`.
 
 ```sh
 sudo stop bluetooth

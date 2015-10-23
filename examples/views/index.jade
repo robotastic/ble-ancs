@@ -1,0 +1,23 @@
+html(lang="en")
+  head
+    title= pageTitle
+
+  body
+  
+	div
+	  table
+	    thead
+	      tr: th Notifications
+	    tbody
+	      each notification, i in notifications
+	        tr
+	          td
+	          	#{notification.uid}
+	          td 
+	        	#{notification.date}
+	          td 
+	        	#{notification.title}
+	          td 
+	        	#{notification.subtitle}
+	          td 
+	        	#{notification.message}        	

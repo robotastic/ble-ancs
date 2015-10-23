@@ -1,4 +1,4 @@
-var BleAncs = require('../index');
+var BleAncs = require('./index');
 var Gpio = require('onoff').Gpio,
   led = new Gpio(4, 'out');
 

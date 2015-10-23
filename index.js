@@ -63,10 +63,7 @@ BleAncs.prototype.onNotification = function(data) {
   if (notification.event == 'removed') {
     debug('Notification Removed: ' + notification);
     if (notification.uid in this._notifications) {
-      var index = this._notifications.indexOf(notification.uid);
-      if (index > -1) {
-        notification = this._notifications[notification.uid]
-        this._notifications.splice(index, 1);
+        delete this._notifications[notification.uid];
         this.emit('removed', notification);
       }
     }

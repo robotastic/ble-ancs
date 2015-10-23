@@ -8,7 +8,7 @@ var app = express();
 app.set('view engine', 'jade');
 
 app.get('/', function (req, res) {
-  res.render('index', { notifications: ancs.notifications});
+  res.render('index', { notifications: ancs._notifications});
 });
 
 var server = app.listen(3000, function () {

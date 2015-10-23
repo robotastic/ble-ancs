@@ -65,7 +65,6 @@ BleAncs.prototype.onNotification = function(data) {
     if (notification.uid in this._notifications) {
         delete this._notifications[notification.uid];
         this.emit('removed', notification);
-      }
     }
   } else {
     this._notifications[notification.uid] = notification;

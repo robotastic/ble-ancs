@@ -26,8 +26,8 @@ html(lang="en")
               td #{notification.title}
               td #{notification.subtitle}
               td #{notification.message}
-            if notifications.versions
-              each ver, j in notifications.versions
+            if notification.versions
+              each ver, j in notification.versions
                 tr
                   td Ver: #{j}
                   td #{ver.uid}

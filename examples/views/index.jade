@@ -29,8 +29,7 @@ html(lang="en")
             if notification.versions
               each ver, j in notification.versions
                 tr
-                  td Ver: #{j}
-                  td #{ver.uid}
+                  td #{ver.uid} - Ver:#{j}
                   td #{ver.event}
                   td #{ver.category}
                   td #{ver.categoryCount}

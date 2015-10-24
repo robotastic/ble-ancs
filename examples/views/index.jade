@@ -8,7 +8,9 @@ html(lang="en")
       table
         thead
           tr: th Notifications
+          tr
             td Event ID
+            td Event
             td Category
             td Count
             td Date
@@ -29,7 +31,7 @@ html(lang="en")
             if notification.versions
               each ver, j in notification.versions
                 tr
-                  td #{ver.uid} - Ver:#{j}
+                  td #{ver.uid} - #{j}
                   td #{ver.event}
                   td #{ver.category}
                   td #{ver.categoryCount}

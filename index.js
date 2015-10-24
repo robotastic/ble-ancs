@@ -109,6 +109,7 @@ BleAncs.prototype.onData = function(data) {
     }
   }
   clearTimeout(this._requestTimeout);
+  this._pendingRequest = false;
   this.unqueueAttributeRequest();
 };
 
@@ -128,7 +129,9 @@ BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxL
 BleAncs.prototype.unqueueAttributeRequest = function() {
   var request = this._requestQueue.shift();
   console.log("Unqueing req, length: " + this._requestQueue.length);
+
   if (request) {
+    this._pendingRequest = true;
     if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
       this.requestNotificationAttribute(request.uid, request.attributeId);
     } else {
@@ -140,18 +143,15 @@ BleAncs.prototype.unqueueAttributeRequest = function() {
 };
 
 BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
-  if (this._requestQueue.length == 0 ) {
-    console.log("Sending attribute request directly");
-    if ((attributeId == 0) || (attributeId == 4) || (attributeId == 5)) {
-      this.requestNotificationAttribute(uid,attributeId);
-    } else {
-      this.requestNotificationAttribute(uid,attributeId, 255);
-    }
-  } else {
+
+
+ 
     console.log("Adding to the queue: " + uid + " attributeId: " + attributeId + " queue: " + this._requestQueue.length);
     var request = new AttributeRequest(uid, attributeId);
     this._requestQueue.push(request);
     this._requestTimeout = setTimeout(unqueueAttributeRequest,1000000);
+  if (this._pendingRequest == false ) {
+    this._unqueueAttributeRequest();
   }
 
 };

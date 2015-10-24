@@ -128,19 +128,20 @@ BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxL
 };
 
 BleAncs.prototype.unqueueAttributeRequest = function() {
-  var request = this._requestQueue.shift();
-  console.log("Unqueing req, length: " + this._requestQueue.length);
+  if (this._requestQueue.length) {
+    var request = this._requestQueue.shift();
+    console.log("Unqueing req, length: " + this._requestQueue.length);
 
-  if (request) {
-    this._pendingRequest = true;
-    if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
-      this.requestNotificationAttribute(request.uid, request.attributeId);
-    } else {
-      this.requestNotificationAttribute(request.uid, request.attributeId, 255);
+    if (request) {
+      this._pendingRequest = true;
+      if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
+        this.requestNotificationAttribute(request.uid, request.attributeId);
+      } else {
+        this.requestNotificationAttribute(request.uid, request.attributeId, 255);
+      }
+      this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
     }
-    this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
   }
-
 };
 
 BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {

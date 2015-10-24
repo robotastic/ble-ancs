@@ -27,6 +27,7 @@ function BleAncs() {
 	this._lastUid = null;
   this._requestQueue = [];
   this._requestTimeout = null;
+  this._pendingRequest = false;
 
 	this._able.on('stateChange', this.onStateChange.bind(this));
 	this._able.on('accept', this.onAccept.bind(this));
@@ -149,7 +150,7 @@ BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
     console.log("Adding to the queue: " + uid + " attributeId: " + attributeId + " queue: " + this._requestQueue.length);
     var request = new AttributeRequest(uid, attributeId);
     this._requestQueue.push(request);
-    this._requestTimeout = setTimeout(unqueueAttributeRequest,1000000);
+    this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
   if (this._pendingRequest == false ) {
     this._unqueueAttributeRequest();
   }

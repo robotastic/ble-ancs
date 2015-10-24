@@ -69,7 +69,11 @@ var Notification = function(ancs, data) {
   this.categoryCount = categoryCount;
 
   this.uid = uid;
-
+  this.title = "";
+  this.subtitle = "";
+  this.date = "";
+  this.message = "";
+  this.messageSize = 0;
   this.on('data', this.onData.bind(this));
 };
 

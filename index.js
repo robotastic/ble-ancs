@@ -14,6 +14,10 @@ var NOTIFICATION_SOURCE_UUID    = '9fbf120d630142d98c5825e699a21dbd';
 var CONTROL_POINT_UUID          = '69d1d8f345e149a898219bbdfdaad9d9';
 var DATA_SOURCE_UUID            = '22eac6e924d64bb5be44b36ace7c7bfb';
 
+function AttributeRequest(uid, attributeId) {
+  this.uid = uid;
+  this.attributeId = attributeId;
+};
 
 function BleAncs() {
 	this._able = new Able();
@@ -21,6 +25,8 @@ function BleAncs() {
 	this._characteristics = {};
 	this._notifications = {};
 	this._lastUid = null;
+  this._requestQueue = [];
+  this._requestTimeout = null;
 
 	this._able.on('stateChange', this.onStateChange.bind(this));
 	this._able.on('accept', this.onAccept.bind(this));
@@ -69,14 +75,20 @@ BleAncs.prototype.onNotification = function(data) {
   }
 
   if (notification.uid in this._notifications) {
-    var old_notification = this._notifications[notification.uid];
 
-    notification.versions = old_notification.versions;
-    old_notification.versions = undefined;
-    notification.versions.push(old_notification);
+    if (notification.event != 'added') {
+      var old_notification = this._notifications[notification.uid];
+
+      notification.versions = old_notification.versions;
+      old_notification.versions = undefined;
+      notification.versions.push(old_notification);
+      this._notifications[notification.uid] = notification;
+    }
+  } else {
+    this._notifications[notification.uid] = notification;
   }
 
-  this._notifications[notification.uid] = notification;
+
   this.emit('notification', notification);
 
 };
@@ -96,6 +108,8 @@ BleAncs.prototype.onData = function(data) {
       this._notifications[this._lastUid].emit('data',data);
     }
   }
+  clearTimeout(this._requestTimeout);
+  this.unqueueAttributeRequest();
 };
 
 BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxLength) {
@@ -111,7 +125,33 @@ BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxL
   this._characteristics[CONTROL_POINT_UUID].write(buffer, false);
 };
 
+BleAncs.prototype.unqueueAttributeRequest = function() {
+  var request = this._requestQueue.shift();
+  if (request) {
+    if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
+      requestNotificationAttribute(request.uid, request.attributeId);
+    } else {
+      requestNotificationAttribute(request.uid, request.attributeId, 255);
+    }
+    this._requestTimeout = setTimeout(unqueueAttributeRequest,1000000);
+  }
 
+};
+
+BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
+  if (this._requestQueue.length == 0 ) {
+    if ((attributeId == 0) || (attributeId == 4) || (attributeId == 5)) {
+      requestNotificationAttribute(uid,attributeId);
+    } else {
+      requestNotificationAttribute(uid,attributeId, 255);
+    }
+  } else {
+    var request = new AttributeRequest(uid, attributeId);
+    this._requestQueue.push(request);
+    this._requestTimeout = setTimeout(unqueueAttributeRequest,1000000);
+  }
+
+};
 
 BleAncs.prototype.onStateChange = function(state) {
   console.log('on -> stateChange: ' + state);

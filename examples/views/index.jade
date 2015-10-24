@@ -27,21 +27,22 @@ html(lang="en")
                 #{notification.subtitle}
               td 
                 #{notification.message}
-            each ver, j in notifications.versions
-              tr
-                td
-                  #{ver.uid}
-                td
-                  #{ver.event}
-                td
-                  #{ver.categoryId}
-                td
-                  #{ver.categoryCount}
-                td 
-                  #{ver.date}
-                td 
-                  #{ver.title}
-                td 
-                  #{ver.subtitle}
-                td 
-                  #{ver.message}         
+            - if (notifications.versions)
+              each ver, j in notifications.versions
+                tr
+                  td
+                    #{ver.uid}
+                  td
+                    #{ver.event}
+                  td
+                    #{ver.categoryId}
+                  td
+                    #{ver.categoryCount}
+                  td 
+                    #{ver.date}
+                  td 
+                    #{ver.title}
+                  td 
+                    #{ver.subtitle}
+                  td 
+                    #{ver.message}         

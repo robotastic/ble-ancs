@@ -11,48 +11,31 @@ html(lang="en")
         tbody
           each notification, i in notifications
             tr
-              td
-                #{notification.uid}
-              td
-                #{notification.event}
-              td
-                #{notification.category}
-              td
-                #{notification.categoryCount}
-              td 
-                - if (notifications.date)
-                  #{notification.date}
-              td 
-                - if (notifications.title)
-                  #{notification.title}
-              td 
-                - if (notifications.subtitle)
-                  #{notification.subtitle}
-              td 
-                - if (notifications.message)
-                  #{notification.message}
+              td #{notification.uid}
+              td #{notification.event}
+              td #{notification.category}
+              td #{notification.categoryCount}
+              td - if (notifications.date)
+                #{notification.date}
+              td - if (notifications.title)
+                #{notification.title}
+              td - if (notifications.subtitle)
+                #{notification.subtitle}
+              td - if (notifications.message)
+                #{notification.message}
             - if (notifications.versions)
               each ver, j in notifications.versions
                 tr
-                  td
-                    Ver: #{j}
-                  td
-                    #{ver.uid}
-                  td
-                    #{ver.event}
-                  td
-                    #{ver.category}
-                  td
-                    #{ver.categoryCount}
-                  td 
-                    - if (ver.date)
-                      #{ver.date}
-                  td 
-                    - if (ver.title)
-                      #{ver.title}
-                  td 
-                    - if (ver.subtitle)
-                      #{ver.subtitle}
-                  td
-                    - if (ver.message) 
-                      #{ver.message}         
+                  td Ver: #{j}
+                  td #{ver.uid}
+                  td #{ver.event}
+                  td #{ver.category}
+                  td #{ver.categoryCount}
+                  td - if (ver.date)
+                    #{ver.date}
+                  td - if (ver.title)
+                    #{ver.title}
+                  td - if (ver.subtitle)
+                    #{ver.subtitle}
+                  td - if (ver.message) 
+                    #{ver.message}         

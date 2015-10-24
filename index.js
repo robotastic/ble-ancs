@@ -152,7 +152,7 @@ BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
     this._requestQueue.push(request);
     this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
   if (this._pendingRequest == false ) {
-    this._unqueueAttributeRequest();
+    this.unqueueAttributeRequest();
   }
 
 };

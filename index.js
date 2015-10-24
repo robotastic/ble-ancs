@@ -129,9 +129,9 @@ BleAncs.prototype.unqueueAttributeRequest = function() {
   var request = this._requestQueue.shift();
   if (request) {
     if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
-      requestNotificationAttribute(request.uid, request.attributeId);
+      this.requestNotificationAttribute(request.uid, request.attributeId);
     } else {
-      requestNotificationAttribute(request.uid, request.attributeId, 255);
+      this.requestNotificationAttribute(request.uid, request.attributeId, 255);
     }
     this._requestTimeout = setTimeout(unqueueAttributeRequest,1000000);
   }
@@ -141,9 +141,9 @@ BleAncs.prototype.unqueueAttributeRequest = function() {
 BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
   if (this._requestQueue.length == 0 ) {
     if ((attributeId == 0) || (attributeId == 4) || (attributeId == 5)) {
-      requestNotificationAttribute(uid,attributeId);
+      this.requestNotificationAttribute(uid,attributeId);
     } else {
-      requestNotificationAttribute(uid,attributeId, 255);
+      this.requestNotificationAttribute(uid,attributeId, 255);
     }
   } else {
     var request = new AttributeRequest(uid, attributeId);

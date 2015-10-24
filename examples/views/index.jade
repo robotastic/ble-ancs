@@ -26,7 +26,7 @@ html(lang="en")
               td #{notification.title}
               td #{notification.subtitle}
               td #{notification.message}
-            - if (notifications.versions)
+            if notifications.versions
               each ver, j in notifications.versions
                 tr
                   td Ver: #{j}

@@ -16,33 +16,43 @@ html(lang="en")
               td
                 #{notification.event}
               td
-                #{notification.categoryId}
+                #{notification.category}
               td
                 #{notification.categoryCount}
               td 
-                #{notification.date}
+                - if (notifications.date)
+                  #{notification.date}
               td 
-                #{notification.title}
+                - if (notifications.title)
+                  #{notification.title}
               td 
-                #{notification.subtitle}
+                - if (notifications.subtitle)
+                  #{notification.subtitle}
               td 
-                #{notification.message}
+                - if (notifications.message)
+                  #{notification.message}
             - if (notifications.versions)
               each ver, j in notifications.versions
                 tr
+                  td
+                    Ver: #{j}
                   td
                     #{ver.uid}
                   td
                     #{ver.event}
                   td
-                    #{ver.categoryId}
+                    #{ver.category}
                   td
                     #{ver.categoryCount}
                   td 
-                    #{ver.date}
+                    - if (var.date)
+                      #{ver.date}
                   td 
-                    #{ver.title}
+                    - if (var.title)
+                      #{ver.title}
                   td 
-                    #{ver.subtitle}
-                  td 
-                    #{ver.message}         
+                    - if (var.subtitle)
+                      #{ver.subtitle}
+                  td
+                    - if (var.message) 
+                      #{ver.message}         

@@ -49,11 +49,13 @@ var Notification = function(ancs, data) {
   var categoryCount = data.readUInt8(3);
   var uid = data.readUInt32LE(4);
 
+
   this._ancs = ancs;
   this._buffer = '';
 
   this.event = EVENT_ID[eventId];
   this.flags = [];
+  this.versions = [];
 
   if (eventFlags & 1) {
     this.flags.push('silent');

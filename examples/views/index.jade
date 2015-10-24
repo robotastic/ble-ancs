@@ -13,6 +13,12 @@ html(lang="en")
             tr
               td
                 #{notification.uid}
+              td
+                #{notification.event}
+              td
+                #{notification.categoryId}
+              td
+                #{notification.categoryCount}
               td 
                 #{notification.date}
               td 
@@ -20,4 +26,22 @@ html(lang="en")
               td 
                 #{notification.subtitle}
               td 
-                #{notification.message}         
+                #{notification.message}
+            each ver, j in notifications.versions
+              tr
+                td
+                  #{ver.uid}
+                td
+                  #{ver.event}
+                td
+                  #{ver.categoryId}
+                td
+                  #{ver.categoryCount}
+                td 
+                  #{ver.date}
+                td 
+                  #{ver.title}
+                td 
+                  #{ver.subtitle}
+                td 
+                  #{ver.message}         

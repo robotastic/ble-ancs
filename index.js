@@ -62,14 +62,22 @@ BleAncs.prototype.onNotification = function(data) {
 
   if (notification.event == 'removed') {
     debug('Notification Removed: ' + notification);
-    if (notification.uid in this._notifications) {
-        delete this._notifications[notification.uid];
-        this.emit('removed', notification);
-    }
-  } else {
-    this._notifications[notification.uid] = notification;
-    this.emit('notification', notification);
+  } else if (notification.event == 'added') {
+    debug('Notification Added: ' + notification);
+  } else if (notification.event == 'added') {
+    debug('Notification Modified: ' + notification);
   }
+
+  if (notification.uid in this._notifications) {
+    var old_notification = this._notifications[notification.uid];
+
+    notification.versions = old_notification.versions;
+    old_notification.versions = undefined;
+    notification.versions.push(old_notification);
+  }
+
+  this._notifications[notification.uid] = notification;
+  this.emit('notification', notification);
 
 };
 

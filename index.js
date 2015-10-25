@@ -244,7 +244,15 @@ BleAncs.prototype.onConnect = function() {
 BleAncs.prototype.onDisconnect = function() {
   console.log('Got a disconnect');
 
+  this._lastUid = null;
+  this._requestQueue = [];
+  this._notifications = {};
+  if (this._requestTimeout){
+    clearTimeout(this._requestTimeout);
+    this._requestTimeout = null;
+  }
 
+  this._pendingRequest = false;
 
   this.emit('disconnect');
 };

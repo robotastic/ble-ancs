@@ -139,7 +139,7 @@ BleAncs.prototype.unqueueAttributeRequest = function() {
       } else {
         this.requestNotificationAttribute(request.uid, request.attributeId, 255);
       }
-      this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
+      this._requestTimeout = setTimeout(this.unqueueAttributeRequest.bind(this),1000000);
     }
   }
 };
@@ -151,7 +151,7 @@ BleAncs.prototype.queueAttributeRequest = function(uid,attributeId) {
     console.log("Adding to the queue: " + uid + " attributeId: " + attributeId + " queue: " + this._requestQueue.length);
     var request = new AttributeRequest(uid, attributeId);
     this._requestQueue.push(request);
-    this._requestTimeout = setTimeout(this.unqueueAttributeRequest,1000000);
+    this._requestTimeout = setTimeout(this.unqueueAttributeRequest.bind(this),1000000);
   if (this._pendingRequest == false ) {
     this.unqueueAttributeRequest();
   }

@@ -1,4 +1,4 @@
-var BleAncs = require('./index');
+var BleAncs = require('../index');
 
 var ancs = new BleAncs();
 

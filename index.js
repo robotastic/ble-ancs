@@ -134,12 +134,14 @@ BleAncs.prototype.unqueueAttributeRequest = function() {
 
     if (request) {
       this._pendingRequest = true;
-      if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
-        this.requestNotificationAttribute(request.uid, request.attributeId);
-      } else {
-        this.requestNotificationAttribute(request.uid, request.attributeId, 255);
-      }
-      this._requestTimeout = setTimeout(this.unqueueAttributeRequest.bind(this),1000000);
+      setTimeout(function(){
+        if ((request.attributeId == 0) || (request.attributeId == 4) || (request.attributeId == 5)) {
+          this.requestNotificationAttribute(request.uid, request.attributeId);
+        } else {
+          this.requestNotificationAttribute(request.uid, request.attributeId, 255);
+        }
+        this._requestTimeout = setTimeout(this.unqueueAttributeRequest.bind(this),1000000);
+      }, 1000);
     }
   }
 };

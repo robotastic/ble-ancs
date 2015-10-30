@@ -1,7 +1,9 @@
 var Able = require('./lib/able');
 
 var util = require('util');
-var debug = require('debug')('BleAncs');
+var debug = require('debug');
+var debugStatus = debug('ble-ancs:status');
+var debugNotifications = debug('ble-ancs:notifications');
 var events = require('events');
 
 var AblePrimaryService = require('./lib/primary-service.js');
@@ -37,12 +39,12 @@ util.inherits(BleAncs, events.EventEmitter);
 BleAncs.prototype.discoverServicesAndCharacteristics = function(callback) {
   this._peripheral.findServiceAndCharacteristics(SERVICE_UUID, [], function(error, services, characteristics) {
     for (var i in characteristics) {
-/*      console.log("CHARECTERISTIC: "+characteristics[i]);
+/*      debugStatus("CHARECTERISTIC: "+characteristics[i]);
       if (characteristics[i].uuid == NOTIFICATION_SOURCE_UUID) {
-        console.log("NOTIFICATION_SOURCE_UUID");
+        debugStatus("NOTIFICATION_SOURCE_UUID");
       }
      if (characteristics[i].uuid == DATA_SOURCE_UUID) {
-        console.log("DATA_SOURCE_UUID");
+        debugStatus("DATA_SOURCE_UUID");
       }*/
       this._characteristics[characteristics[i].uuid] = characteristics[i];
     }
@@ -52,7 +54,7 @@ BleAncs.prototype.discoverServicesAndCharacteristics = function(callback) {
 
     this._characteristics[NOTIFICATION_SOURCE_UUID].notify(true);
     this._characteristics[DATA_SOURCE_UUID].notify(true);
-    
+
     callback();
   }.bind(this));
 };
@@ -61,11 +63,11 @@ BleAncs.prototype.onNotification = function(data) {
   var notification = new Notification(this, data);
 
   if (notification.event == 'removed') {
-    debug('Notification Removed: ' + notification);
+    debugNotifications('Notification Removed: ' + notification);
   } else if (notification.event == 'added') {
-    debug('Notification Added: ' + notification);
+    debugNotifications('Notification Added: ' + notification);
   } else if (notification.event == 'added') {
-    debug('Notification Modified: ' + notification);
+    debugNotifications('Notification Modified: ' + notification);
   }
 
   if (notification.uid in this._notifications) {
@@ -114,7 +116,7 @@ BleAncs.prototype.requestNotificationAttribute = function(uid, attributeId, maxL
 
 
 BleAncs.prototype.onStateChange = function(state) {
-  console.log('on -> stateChange: ' + state);
+  debugStatus('on -> stateChange: ' + state);
 
   if (state === 'poweredOn') {
     if (this._able.startAdvertisingWithEIRData) {
@@ -156,7 +158,7 @@ BleAncs.prototype.onStateChange = function(state) {
 
 BleAncs.prototype.onAccept = function(peripheral) {
 
-   console.log('on -> accept: ' );
+   debugStatus('on -> accept: ' );
 	  this._peripheral = peripheral;
 
 
@@ -167,7 +169,7 @@ BleAncs.prototype.onAccept = function(peripheral) {
 
 BleAncs.prototype.onAdvertisingStart = function(error) {
 
-  console.log('on -> advertisingStart: ' + (error ? 'error ' + error : 'success'));
+  debugStatus('on -> advertisingStart: ' + (error ? 'error ' + error : 'success'));
 
     this._able.setServices(  [    new AblePrimaryService({
         uuid: '13333333333333333333333333333337',            //'7905f431b5ce4e99a40f4b1e122d00d0',
@@ -182,22 +184,22 @@ BleAncs.prototype.onMtuChange = function() {
 
 
 BleAncs.prototype.onEncryptChange = function() {
-  console.log("able encryptChange!!!");
+  debugStatus("able encryptChange!!!");
       this.discoverServicesAndCharacteristics(function() {
     });
 };
 
 
 BleAncs.prototype.onEncryptFail = function() {
-  console.log("able -> encryptFail");
+  debugStatus("able -> encryptFail");
 };
 
 BleAncs.prototype.onConnect = function() {
-    console.log('able -> connect');
+    debugStatus('able -> connect');
 };
 
 BleAncs.prototype.onDisconnect = function() {
-  console.log('Got a disconnect');
+  debugStatus('Got a disconnect');
 
 
 

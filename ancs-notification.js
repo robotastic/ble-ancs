@@ -160,7 +160,9 @@ Notification.prototype.readAppIdentifier = function(callback) {
     callback(appIdentifier);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, APP_IDENTIFIER);
+  this._ancs.queueAttributeRequest(this.uid, APP_IDENTIFIER);
+
+  //this._ancs.requestNotificationAttribute(this.uid, APP_IDENTIFIER);
 };
 
 Notification.prototype.readTitle = function(callback) {
@@ -168,7 +170,9 @@ Notification.prototype.readTitle = function(callback) {
     callback(title);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, TITLE, 255);
+  this._ancs.queueAttributeRequest(this.uid, TITLE);
+
+  //this._ancs.requestNotificationAttribute(this.uid, TITLE, 255);
 };
 
 Notification.prototype.readSubtitle = function(callback) {
@@ -176,7 +180,9 @@ Notification.prototype.readSubtitle = function(callback) {
     callback(subtitle);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, SUBTITLE, 255);
+  this._ancs.queueAttributeRequest(this.uid, SUBTITLE);
+
+  //this._ancs.requestNotificationAttribute(this.uid, SUBTITLE, 255);
 };
 
 Notification.prototype.readMessage = function(callback) {
@@ -185,7 +191,9 @@ Notification.prototype.readMessage = function(callback) {
       callback(message);
     });
 
-    this._ancs.requestNotificationAttribute(this.uid, MESSAGE, messageSize);
+  this._ancs.queueAttributeRequest(this.uid, MESSAGE);
+
+    //this._ancs.requestNotificationAttribute(this.uid, MESSAGE, messageSize);
   }.bind(this));
 };
 
@@ -194,13 +202,17 @@ Notification.prototype.readMessageSize = function(callback) {
     callback(messageSize);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, MESSAGE_SIZE);
+  this._ancs.queueAttributeRequest(this.uid, MESSAGE_SIZE);
+
+  //this._ancs.requestNotificationAttribute(this.uid, MESSAGE_SIZE);
 };
 
 Notification.prototype.readDate = function(callback) {
   this.once('date', function(date) {
     callback(date);
   });
+
+  this._ancs.queueAttributeRequest(this.uid, DATE);
 
   this._ancs.requestNotificationAttribute(this.uid, DATE);
 };
@@ -210,7 +222,9 @@ Notification.prototype.readPositiveLabel = function(callback) {
     callback(positiveLabel);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, POSITIVE_LABEL, 255);
+  this._ancs.queueAttributeRequest(this.uid, POSITIVE_LABEL);
+
+  //this._ancs.requestNotificationAttribute(this.uid, POSITIVE_LABEL, 255);
 };
 
 Notification.prototype.readNegativeLabel = function(callback) {
@@ -218,8 +232,11 @@ Notification.prototype.readNegativeLabel = function(callback) {
     callback(negativeLabel);
   });
 
-  this._ancs.requestNotificationAttribute(this.uid, NEGATIVE_LABEL, 255);
+  this._ancs.queueAttributeRequest(this.uid, NEGATIVE_LABEL);
+
+  //this._ancs.requestNotificationAttribute(this.uid, NEGATIVE_LABEL, 255);
 };
+
 
 Notification.prototype.readAttributes = function(callback) {
   this.readAppIdentifier(function(appIdentifier) {
